@@ -1,0 +1,9 @@
+{
+  "name": "acts",
+  "description": "Todo application",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "*"
+  }
+}
