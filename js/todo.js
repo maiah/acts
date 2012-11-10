@@ -3,12 +3,18 @@
 function TodoCtrl($scope, $http, $resource) {
   $scope.todos = [];
 
-  var Todo = $resource('/api/todos');
+  var Todo = $resource('/api/todos/:id', {}, { update: { method: 'PUT' } });
   Todo.get(function(result) {
     angular.forEach(result, function(todo) {
       $scope.todos.push(todo);
     });
   });
+
+  $scope.getById = function() {
+    Todo.get({ id: 3000 }, function(result) {
+      console.log(result);
+    });
+  };
 
   // This is also working
   /*
@@ -21,8 +27,13 @@ function TodoCtrl($scope, $http, $resource) {
   */
 
   $scope.addTodo = function() {
-    $scope.todos.push({ text: $scope.todoText, done: false });
+    var todo = { text: $scope.todoText, done: false };
+    $scope.todos.push(todo);
     $scope.todoText= '';
+
+    Todo.save(todo, function(savedTodo) {
+      console.dir(savedTodo);
+    });
   };
 
   $scope.remaining = function() {
@@ -46,5 +57,12 @@ function TodoCtrl($scope, $http, $resource) {
   $scope.remove = function(todo) {
     var idx = $scope.todos.indexOf(todo);
     $scope.todos.splice(idx, 1);
+  };
+
+  $scope.update = function() {
+    var sampleTodoUpdate = { 5000: {text: 'Hey you', done: false } };
+    Todo.update(sampleTodoUpdate, function(updatedTodo) {
+      console.log(updatedTodo);
+    });
   };
 }
